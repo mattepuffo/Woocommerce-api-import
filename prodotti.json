@@ -1,0 +1,97 @@
+[
+  {
+    "sku": "K200-200",
+    "name": "K200-200",
+    "type": "variable",
+    "description": "Pantalone 200, il classico",
+    "sold_individually": true,
+    "categories": [
+      "PANTALONE",
+      "GONNA",
+      "MAGLIONE"
+    ],
+    "attributes": [
+      {
+        "name": "Colore",
+        "visible": true,
+        "variation": true,
+        "options": [
+          "PANNA",
+          "BLU"
+        ]
+      },
+      {
+        "name": "Taglia",
+        "visible": true,
+        "variation": true,
+        "options": [
+          "S",
+          "M",
+          "L"
+        ]
+      }
+    ],
+    "variations": [
+      {
+        "regular_price": "15.00",
+        "manage_stock": true,
+        "stock_quantity": 10,
+        "attributes": [
+          {
+            "name": "Colore",
+            "option": "PANNA"
+          },
+          {
+            "name": "Taglia",
+            "option": "S"
+          }
+        ]
+      },
+      {
+        "regular_price": "10.00",
+        "manage_stock": true,
+        "stock_quantity": 5,
+        "attributes": [
+          {
+            "name": "Colore",
+            "option": "PANNA"
+          },
+          {
+            "name": "Taglia",
+            "option": "M"
+          }
+        ]
+      },
+      {
+        "regular_price": "15.00",
+        "manage_stock": true,
+        "stock_quantity": 7,
+        "attributes": [
+          {
+            "name": "Colore",
+            "option": "PANNA"
+          },
+          {
+            "name": "Taglia",
+            "option": "L"
+          }
+        ]
+      },
+      {
+        "regular_price": "15.00",
+        "manage_stock": true,
+        "stock_quantity": 10,
+        "attributes": [
+          {
+            "name": "Colore",
+            "option": "BLU"
+          },
+          {
+            "name": "Taglia",
+            "option": "S"
+          }
+        ]
+      }
+    ]
+  }
+]
