@@ -14,8 +14,8 @@ use Automattic\WooCommerce\Client;
 function getWoocommerceConfig() {
     $woocommerce = new Client(
         'https://www.sito.com',
-        'ck_.........',
-        'cs_.........',
+        'ck_...',
+        'cs_...',
         [
             'wp_api' => true,
             'version' => 'wc/v3',
@@ -50,6 +50,10 @@ function createProducts() {
         $id = null;
         $productExist = checkProductBySku($product['sku']);
 
+        foreach ($product['categories'] as $category) {
+            $categoriesIds[] = ['id' => getCategoryIdByName($category)];
+        }
+
         $data = [
             'name' => $product['name'],
             'sku' => $product['sku'],
@@ -57,6 +61,7 @@ function createProducts() {
             'type' => $product['type'],
             'sold_individually' => $product['sold_individually'],
             'attributes' => $product['attributes'],
+            'categories' => $categoriesIds,
         ];
 
         $variations = $product['variations'];
@@ -105,7 +110,53 @@ function createVariationsById($id, $variations) {
     $woocommerce = getWoocommerceConfig();
 
     foreach ($variations as $k => $v) {
-        echo json_encode($woocommerce->post('products/' . $id . '/variations', $v));
+        $varExist = checkVariationsByProductIdSku($id, $v['sku']);
+
+        if ($varExist['exist']) {
+            echo json_encode($woocommerce->put('products/' . $id . '/variations/' . $varExist['idVariation'], $v));
+        } else {
+            echo json_encode($woocommerce->post('products/' . $id . '/variations', $v));
+
+        }
+    }
+}
+
+/**
+ * Cerca le variazioni per prodotto e SKU variations
+ *
+ * @param $id
+ * @param $sku
+ * @return array
+ */
+function checkVariationsByProductIdSku($id, $sku) {
+    $woocommerce = getWoocommerceConfig();
+    $variations = $woocommerce->get('products/' . $id . '/variations');
+
+    foreach ($variations as $variation) {
+        $currentSku = strtolower($variation->sku);
+        $skuCode = strtolower($sku);
+
+        if ($currentSku === $skuCode) {
+            return ['exist' => true, 'idVariation' => $variation->id];
+        }
+    }
+
+    return ['exist' => false, 'idVariation' => null];
+}
+
+/**
+ * Cerca le categorie per nome e ritorna l'id
+ *
+ * @param $categoryName
+ * @return mixed
+ */
+function getCategoryIdByName($categoryName) {
+    $woocommerce = getWoocommerceConfig();
+    $categories = $woocommerce->get('products/categories');
+    foreach ($categories as $category) {
+        if ($category->name == $categoryName) {
+            return $category->id;
+        }
     }
 }
 
@@ -163,14 +214,15 @@ function createAttributesTerms($id, $file) {
     $woocommerce = getWoocommerceConfig();
     $data = getJsonFromFile($file);
 
-    echo json_encode($woocommerce->post('products/attributes/' . $id . '/terms/batch', $data));
+    $woocommerce->post('products/attributes/' . $id . '/terms/batch', $data);
+//    echo json_encode($woocommerce->post('products/attributes/' . $id . '/terms/batch', $data));
 }
 
 function init() {
     echo 'Loading...<br>';
-    createCategories();
-    createAttributesTerms(13, 'colori.json');
-    createAttributesTerms(14, 'taglie.json');
+//    createCategories();
+//    createAttributesTerms(13, 'colori.json');
+//    createAttributesTerms(14, 'taglie.json');
     createProducts();
     echo '<br>End';
 }

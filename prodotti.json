@@ -6,9 +6,7 @@
     "description": "Pantalone 200, il classico",
     "sold_individually": true,
     "categories": [
-      "PANTALONE",
-      "GONNA",
-      "MAGLIONE"
+      "PANTALONE"
     ],
     "attributes": [
       {
@@ -17,7 +15,7 @@
         "variation": true,
         "options": [
           "PANNA",
-          "BLU"
+          "ROSSO"
         ]
       },
       {
@@ -33,6 +31,7 @@
     ],
     "variations": [
       {
+        "sku": "111",
         "regular_price": "15.00",
         "manage_stock": true,
         "stock_quantity": 10,
@@ -48,24 +47,59 @@
         ]
       },
       {
+        "sku": "222",
         "regular_price": "10.00",
         "manage_stock": true,
         "stock_quantity": 5,
         "attributes": [
           {
             "name": "Colore",
-            "option": "PANNA"
+            "option": "ROSSO"
           },
           {
             "name": "Taglia",
             "option": "M"
           }
         ]
+      }
+    ]
+  },
+  {
+    "sku": "K200-201",
+    "name": "K200-201",
+    "type": "variable",
+    "description": "Pantalone 201, il classico",
+    "sold_individually": true,
+    "categories": [
+      "PANTALONE"
+    ],
+    "attributes": [
+      {
+        "name": "Colore",
+        "visible": true,
+        "variation": true,
+        "options": [
+          "PANNA",
+          "NERO"
+        ]
       },
       {
+        "name": "Taglia",
+        "visible": true,
+        "variation": true,
+        "options": [
+          "S",
+          "M",
+          "L"
+        ]
+      }
+    ],
+    "variations": [
+      {
+        "sku": "555",
         "regular_price": "15.00",
         "manage_stock": true,
-        "stock_quantity": 7,
+        "stock_quantity": 10,
         "attributes": [
           {
             "name": "Colore",
@@ -73,18 +107,19 @@
           },
           {
             "name": "Taglia",
-            "option": "L"
+            "option": "S"
           }
         ]
       },
       {
+        "sku": "888",
         "regular_price": "15.00",
         "manage_stock": true,
         "stock_quantity": 10,
         "attributes": [
           {
             "name": "Colore",
-            "option": "BLU"
+            "option": "NERO"
           },
           {
             "name": "Taglia",
