@@ -1,5 +1,7 @@
 <?php
 
+define("IMG_SMALL", "https://web.compagniaitaliana.it/IMMAGINI/cronos/small/");
+
 require __DIR__ . '/vendor/autoload.php';
 
 use Automattic\WooCommerce\Client;
@@ -13,9 +15,9 @@ use Automattic\WooCommerce\Client;
  */
 function getWoocommerceConfig() {
     $woocommerce = new Client(
-        'https://www.sito.com',
-        'ck_...',
-        'cs_...',
+        'https://www.mattepuffo.com/wp',
+        'ck_4e19c3e3fcc1234d7711f2e616c99ebb1eb6354e',
+        'cs_1d2c98ef7b26f9b4810795b28d6c9dcc936e5da0',
         [
             'wp_api' => true,
             'version' => 'wc/v3',
@@ -45,13 +47,25 @@ function getJsonFromFile($file = 'prodotti.json') {
 function createProducts() {
     $woocommerce = getWoocommerceConfig();
     $products = getJsonFromFile();
+    $imgCounter = 0;
 
     foreach ($products as $product) {
         $id = null;
+        $imagesFormated = array();
+
         $productExist = checkProductBySku($product['sku']);
 
         foreach ($product['categories'] as $category) {
             $categoriesIds[] = ['id' => getCategoryIdByName($category)];
+        }
+
+        $images = $product['imgs'];
+        foreach ($images as $image) {
+            $imagesFormated[] = [
+                'src' => IMG_SMALL . $image,
+                'position' => 0
+            ];
+            $imgCounter++;
         }
 
         $data = [
@@ -62,6 +76,7 @@ function createProducts() {
             'sold_individually' => $product['sold_individually'],
             'attributes' => $product['attributes'],
             'categories' => $categoriesIds,
+            'images' => $imagesFormated,
         ];
 
         $variations = $product['variations'];
@@ -70,10 +85,11 @@ function createProducts() {
             $product = $woocommerce->post('products', $data);
             $id = $product->id;
         } else {
-            $woocommerce->put('products/' . $productExist['idProduct'], $data);
+            $product = $woocommerce->put('products/' . $productExist['idProduct'], $data);
             $id = $productExist['idProduct'];
         }
 
+//        echo json_encode($product);
         createVariationsById($id, $variations);
     }
 }
@@ -113,11 +129,12 @@ function createVariationsById($id, $variations) {
         $varExist = checkVariationsByProductIdSku($id, $v['sku']);
 
         if ($varExist['exist']) {
-            echo json_encode($woocommerce->put('products/' . $id . '/variations/' . $varExist['idVariation'], $v));
+            $res = $woocommerce->put('products/' . $id . '/variations/' . $varExist['idVariation'], $v);
         } else {
-            echo json_encode($woocommerce->post('products/' . $id . '/variations', $v));
-
+            $res = $woocommerce->post('products/' . $id . '/variations', $v);
         }
+
+//        echo json_encode($res);
     }
 }
 
@@ -176,7 +193,9 @@ function createCategories() {
                 $data = [
                     "name" => $a
                 ];
-                echo json_encode($woocommerce->post('products/categories', $data));
+
+                $res = $woocommerce->post('products/categories', $data);
+//                echo json_encode($res);
             }
         }
     }
@@ -214,13 +233,13 @@ function createAttributesTerms($id, $file) {
     $woocommerce = getWoocommerceConfig();
     $data = getJsonFromFile($file);
 
-    $woocommerce->post('products/attributes/' . $id . '/terms/batch', $data);
-//    echo json_encode($woocommerce->post('products/attributes/' . $id . '/terms/batch', $data));
+    $res = $woocommerce->post('products/attributes/' . $id . '/terms/batch', $data);
+//    echo json_encode($res);
 }
 
 function init() {
     echo 'Loading...<br>';
-//    createCategories();
+    createCategories();
 //    createAttributesTerms(13, 'colori.json');
 //    createAttributesTerms(14, 'taglie.json');
     createProducts();

@@ -9,3 +9,7 @@ Salvatevi da qualche parte entrambe le chiavi che vi serviranno nello script
 Installare la libreria tramite composer
 
     composer require automattic/woocommerce
+
+## 2020-04-23
+- Aggiunte le immagini
+- Fix bug in update prodotti

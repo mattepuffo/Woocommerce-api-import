@@ -8,14 +8,16 @@
     "categories": [
       "PANTALONE"
     ],
+    "imgs": [
+      "K200-200.jpg"
+    ],
     "attributes": [
       {
         "name": "Colore",
         "visible": true,
         "variation": true,
         "options": [
-          "PANNA",
-          "ROSSO"
+          "BLU - 0399"
         ]
       },
       {
@@ -38,7 +40,7 @@
         "attributes": [
           {
             "name": "Colore",
-            "option": "PANNA"
+            "option": "BLU - 0399"
           },
           {
             "name": "Taglia",
@@ -54,7 +56,7 @@
         "attributes": [
           {
             "name": "Colore",
-            "option": "ROSSO"
+            "option": "BLU - 0399"
           },
           {
             "name": "Taglia",
@@ -65,13 +67,16 @@
     ]
   },
   {
-    "sku": "K200-201",
-    "name": "K200-201",
+    "sku": "K200-210",
+    "name": "K200-210",
     "type": "variable",
-    "description": "Pantalone 201, il classico",
+    "description": "Pantalone 210",
     "sold_individually": true,
     "categories": [
-      "PANTALONE"
+      "CAMICIA"
+    ],
+    "imgs": [
+      "K200-210.jpg"
     ],
     "attributes": [
       {
@@ -79,8 +84,7 @@
         "visible": true,
         "variation": true,
         "options": [
-          "PANNA",
-          "NERO"
+          "UNICO - 0000"
         ]
       },
       {
@@ -103,7 +107,7 @@
         "attributes": [
           {
             "name": "Colore",
-            "option": "PANNA"
+            "option": "UNICO - 0000"
           },
           {
             "name": "Taglia",
@@ -119,11 +123,11 @@
         "attributes": [
           {
             "name": "Colore",
-            "option": "NERO"
+            "option": "UNICO - 0000"
           },
           {
             "name": "Taglia",
-            "option": "S"
+            "option": "L"
           }
         ]
       }
