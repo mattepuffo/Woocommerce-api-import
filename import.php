@@ -1,7 +1,11 @@
 <?php
 
-define("IMG_SMALL", "https://web.compagniaitaliana.it/IMMAGINI/cronos/small/");
+// https://web.compagniaitaliana.it/api/ecommerce/import.php
 
+ini_set('memory_limit', '8600M');
+set_time_limit(0);
+
+require_once './config.php';
 require __DIR__ . '/vendor/autoload.php';
 
 use Automattic\WooCommerce\Client;
@@ -15,9 +19,9 @@ use Automattic\WooCommerce\Client;
  */
 function getWoocommerceConfig() {
     $woocommerce = new Client(
-        'https://www.mattepuffo.com/wp',
-        'ck_4e19c3e3fcc1234d7711f2e616c99ebb1eb6354e',
-        'cs_1d2c98ef7b26f9b4810795b28d6c9dcc936e5da0',
+        WC_URL,
+        CK_TOKEN,
+        CS_TOKEN,
         [
             'wp_api' => true,
             'version' => 'wc/v3',
@@ -34,7 +38,7 @@ function getWoocommerceConfig() {
  * @param string $file
  * @return mixed
  */
-function getJsonFromFile($file = 'prodotti.json') {
+function getJsonFromFile($file = 'json/prodotti.json') {
     $json = json_decode(file_get_contents($file), true);
     return $json;
 }
@@ -82,21 +86,50 @@ function createProducts() {
         $variations = $product['variations'];
 
         if (!$productExist['exist']) {
-            $product = $woocommerce->post('products', $data);
-            $id = $product->id;
+            $pr = $woocommerce->post('products', $data);
+            $id = $pr->id;
         } else {
-            $product = $woocommerce->put('products/' . $productExist['idProduct'], $data);
+            $pr = $woocommerce->put('products/' . $productExist['idProduct'], $data);
             $id = $productExist['idProduct'];
         }
 
 //        echo json_encode($product);
         createVariationsById($id, $variations);
+
+        assignBrandById($id, $product['name']);
     }
 }
 
 /**
- * Controlla se un prodotto già esiste dallo SKU
+ * Assegna un brand al prodotto
+ * Usa il plugin Perfect Brands for WooCommerce
+ * https://quadlayers.com/documentation/perfect-woocommerce-brands/installation/
+ * https://github.com/quadlayers/perfect-woocommerce-brands/wiki/REST-API-docs
  *
+ * ATTENZIONE: i brands devono esser già creati
+ *
+ * @param $id
+ * @param $codice
+ */
+function assignBrandById($id, $codice) {
+    // KATE = 211
+    // COMPAGNIA = 212
+
+    $woocommerce = getWoocommerceConfig();
+
+    switch (substr($codice, 0, 1)) {
+        case 'K':
+            $brands = array(211);
+            break;
+        case 'C':
+            $brands = array(212);
+            break;
+    }
+
+    $woocommerce->put('products/' . $id, ['brands' => $brands]);
+}
+
+/**
  * @param $skuCode
  * @return array
  */
@@ -195,7 +228,6 @@ function createCategories() {
                 ];
 
                 $res = $woocommerce->post('products/categories', $data);
-//                echo json_encode($res);
             }
         }
     }
@@ -227,8 +259,8 @@ function checkCategoryByName($categoryName) {
  * @param $file
  */
 function createAttributesTerms($id, $file) {
-    // Colore = 13
-    // Taglia = 14
+    // Colore = 4
+    // Taglia = 5
 
     $woocommerce = getWoocommerceConfig();
     $data = getJsonFromFile($file);
@@ -239,10 +271,12 @@ function createAttributesTerms($id, $file) {
 
 function init() {
     echo 'Loading...<br>';
-    createCategories();
-//    createAttributesTerms(13, 'colori.json');
-//    createAttributesTerms(14, 'taglie.json');
+
+//    createCategories();
+//    createAttributesTerms(4, 'json/colori.json');
+//    createAttributesTerms(5, 'json/taglie.json');
     createProducts();
+
     echo '<br>End';
 }
 
